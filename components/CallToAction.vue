@@ -9,7 +9,7 @@
                 </h1>
                 <button
                     @click="$router.push({ path: '/register' })"
-                    class="inline-block bg-orange-button hover:bg-green-button"
+                    class="inline-block bg-orange-button hover:bg-green-button text-white font-semibold px-6 py-4 mt-10 text-lg rounded-full"
                 >
                     Getting Started
                 </button>
