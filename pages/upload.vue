@@ -37,8 +37,7 @@
             <div class="mb-4">
               <button
                 @click="$router.push({ path: '/register-success' })"
-                class="block w-full bg-transparent border-white border hover:bg-white hover:bg-opacity-25 text-white font-light px-6 py-4 text-lg rounded-full"
-              >
+                class="block w-full bg-transparent border-white border hover:bg-white hover:bg-opacity-25 text-white font-light px-6 py-4 text-lg rounded-full">
                 Skip
               </button>
             </div>
@@ -49,7 +48,39 @@
 
 <script>
 export default {
-    layout: 'auth'
+  layout: 'auth',
+  data() {
+    return {
+      url: '/avatar.jpg',
+      selectedFile: undefined
+    }
+  },
+  methods: {
+    onFileChanged(e) {
+      const file = e.target.files[0]
+      this.url = URL.createObjectURL(file)
+      this.selectedFile = this.$refs.files
+    },
+    async upload(file) {
+      let formData = new FormData()
+
+      formData.append('avatar', this.selectedFile.item[0])
+
+      try {
+        let response = await this.$axios.post('/api/v1/avatars', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+
+        console.log(response)
+
+        this.$router.push('/register-success')
+      } catch (error) {
+        console.error(error)
+      }
+    }
+  },
 }
 </script>
 

@@ -10,60 +10,55 @@
             </h2>
             <div class="mb-6">
               <div class="mb-4">
-                <label class="font-normal text-lg text-white block mb-3"
-                  >Full Name</label
+                <label class="font-normal text-lg text-white block mb-3">Full Name</label
                 >
                 <input
                   type="text"
                   class="auth-form focus:outline-none focus:bg-purple-hover focus:shadow-outline focus:border-purple-hover-stroke focus:text-gray-100"
                   placeholder="Write Your Name Here"
-                  value="Julia Keeva Hanna"
+                  v-model="register.name"
                 />
               </div>
             </div>
             <div class="mb-6">
               <div class="mb-4">
-                <label class="font-normal text-lg text-white block mb-3"
-                  >Occupation</label
-                >
+                <label class="font-normal text-lg text-white block mb-3">Occupation</label>
                 <input
                   type="text"
                   class="auth-form focus:outline-none focus:bg-purple-hover focus:shadow-outline focus:border-purple-hover-stroke focus:text-gray-100"
                   placeholder="Write your occupation here"
-                  value="Graphic Designer"
+                  v-model="register.occupation"
                 />
               </div>
             </div>
             <div class="mb-6">
               <div class="mb-4">
-                <label class="font-normal text-lg text-white block mb-3"
-                  >Email Address</label
-                >
+                <label class="font-normal text-lg text-white block mb-3">Email Address</label>
                 <input
                   type="email"
                   class="auth-form focus:outline-none focus:bg-purple-hover focus:shadow-outline focus:border-purple-hover-stroke focus:text-gray-100"
                   placeholder="Write your email address here"
-                  value="julia.keeva@gmail.com"
+                  v-model="register.email"
                 />
               </div>
             </div>
             <div class="mb-6">
               <div class="mb-4">
-                <label class="font-normal text-lg text-white block mb-3"
-                  >Password</label
+                <label class="font-normal text-lg text-white block mb-3">Password</label
                 >
                 <input
                   type="password"
                   class="auth-form focus:outline-none focus:bg-purple-hover focus:shadow-outline focus:border-purple-hover-stroke focus:text-gray-100"
                   placeholder="Type your password here"
-                  value="nasigorenglimaribbu"
+                  v-model="register.password"
+                  @keyup.enter="userRegister"
                 />
               </div>
             </div>
             <div class="mb-6">
               <div class="mb-4">
                 <button
-                  @click="$router.push({ path: '/upload' })"
+                  @click="userRegister"
                   class="block w-full bg-orange-button hover:bg-green-button text-white font-semibold px-6 py-4 text-lg rounded-full"
                 >
                   Continue Sign Up
@@ -85,7 +80,28 @@
 
 <script>
 export default {
-    layout: 'auth'
+  layout: 'auth',
+  data() {
+    return {
+      register: {
+        name: "",
+        email: "",
+        occupation: "",
+        password: ""
+      }
+    }
+  },
+  methods: {
+    async userRegister() {
+      try {
+        let response = await this.$axios.post('/api/v1/users', this.register)
+        console.log(response.data.data.token)
+        this.$auth.setUserToken(response.data.data.token).then(() => this.$router.push({ path: '/upload' }))
+      } catch (error) {
+        console.error(error)
+      }
+    }
+  }
 }
 </script>
 
