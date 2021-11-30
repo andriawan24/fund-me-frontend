@@ -3,9 +3,9 @@
         <div class="w-full lg:w-1/3 px-10 lg:px-0">
           <div class="flex justify-center items-center mx-auto mb-4 w-40">
             <div class="relative">
-              <a href="#">
+              <div class="cursor-pointer" @click="$refs.file.click()">
                 <img
-                  src="/avatar.jpg"
+                  :src="url"
                   alt=""
                   class="rounded-full border-white border-4"
                 />
@@ -14,11 +14,12 @@
                   alt=""
                   class="absolute right-0 bottom-0 pb-2"
                 />
-              </a>
+                <input type="file" ref="file" style="display: none" accept="image/*" @change="onFileChanged">
+              </div>
             </div>
           </div>
           <h2 class="font-normal mb-3 text-3xl text-white text-center">
-            Hi, Julia
+            Hi, {{ this.$store.state.auth.user.name }}
           </h2>
           <p class="text-white text-center font-light">
             Please upload your selfie
@@ -26,7 +27,9 @@
           <div class="mb-4 mt-6">
             <div class="mb-3">
               <button
-                @click="$router.push({ path: '/register-success' })"
+                :disabled="selectedFile == undefined"
+                @click="upload"
+                :class="selectedFile == undefined ? 'opacity-50 cursor-not-allowed' : ''"
                 class="block w-full bg-orange-button hover:bg-green-button text-white font-semibold px-6 py-4 text-lg rounded-full"
               >
                 Sign Up Now
@@ -59,15 +62,15 @@ export default {
     onFileChanged(e) {
       const file = e.target.files[0]
       this.url = URL.createObjectURL(file)
-      this.selectedFile = this.$refs.files
+      this.selectedFile = this.$refs.file.files
     },
     async upload(file) {
       let formData = new FormData()
 
-      formData.append('avatar', this.selectedFile.item[0])
+      formData.append('avatar', this.selectedFile.item(0))
 
       try {
-        let response = await this.$axios.post('/api/v1/avatars', formData, {
+        let response = await this.$axios.post('/api/v1/avatar', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -75,7 +78,7 @@ export default {
 
         console.log(response)
 
-        this.$router.push('/register-success')
+        this.$router.push({ path: '/register-success' })
       } catch (error) {
         console.error(error)
       }
