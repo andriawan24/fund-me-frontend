@@ -75,6 +75,8 @@ export default {
         let response = await this.$auth.loginWith('local', { data: this.login })
         this.$auth.setUser(response.data.data)
         console.log(response)
+        console.log(response.data)
+        console.log(this.$auth.token)
       } catch (error) {
         console.error(error)
       }

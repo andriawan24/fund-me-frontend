@@ -59,6 +59,10 @@ export default {
     baseURL: 'http://localhost:8080',
   },
 
+  server: {
+    host: "0.0.0.0"
+  },
+
   auth: {
     strategies: {
       local: {
@@ -66,7 +70,7 @@ export default {
           property: 'data.token',
           global: true,
           // required: true,
-          // type: 'Bearer'
+          type: 'Bearer'
         },
         user: {
           property: 'data',
